@@ -207,6 +207,16 @@ dotnet build -t:Run -f net10.0-android tests/TR.Maui.AnchorPopover.UITests/TR.Ma
 
 See the [Unit Tests README](./tests/TR.Maui.AnchorPopover.UnitTests/README.md) and [UI Tests README](./tests/TR.Maui.AnchorPopover.UITests/README.md) for detailed information.
 
+### Continuous Integration
+
+The project includes automated test workflows:
+
+- **Build and Test** - Builds library, sample, and test projects on Ubuntu
+- **Unit Tests** - Runs unit tests on Ubuntu (Android) and macOS (iOS)
+- **UI Tests** - Deploys and validates UI test apps on Android and iOS
+
+These workflows run automatically on pushes and pull requests to `main` and `develop` branches.
+
 ## Requirements
 
 - .NET 10.0 or later

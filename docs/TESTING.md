@@ -173,31 +173,69 @@ For each platform, verify:
 
 ### GitHub Actions
 
-Tests are integrated into the CI/CD pipeline:
+The project includes three automated workflows:
 
-**Build Workflow** (`.github/workflows/build.yml`):
-- Builds library and sample projects
-- Compiles test projects
-- Validates all platforms compile
+#### 1. Build and Test Workflow (`.github/workflows/build.yml`)
+Runs on: Ubuntu (Linux)
+- Builds library, sample, and test projects
+- Validates compilation on Android target
+- Uploads NuGet package artifacts
 
-**Future Enhancements:**
-- Automated UI testing with Appium
-- Screenshot comparison tests
-- Performance benchmarks
-- Code coverage reporting
+#### 2. Unit Tests Workflow (`.github/workflows/unit-tests.yml`)
+Runs on: Ubuntu and macOS
 
-### Running Tests in CI
+**Ubuntu Job:**
+- Installs Android emulator (API 33)
+- Runs unit tests on Android target
+- Uploads test results as artifacts
 
-The unit tests compile in CI but require emulators/simulators to execute. For full test execution in CI:
+**macOS Job:**
+- Installs iOS/macOS workloads
+- Boots iOS simulator (iPhone 15)
+- Runs unit tests on iOS target
+- Uploads test results as artifacts
 
-**Android:**
-- Use Android emulator in GitHub Actions
-- Run: `dotnet test -f net10.0-android`
+#### 3. UI Tests Workflow (`.github/workflows/ui-tests.yml`)
+Runs on: Ubuntu and macOS
 
-**iOS:**
+**Android Job:**
+- Builds UI test app for Android
+- Deploys to Android emulator
+- Serves as smoke test for app deployment
+
+**iOS Job:**
+- Builds UI test app for iOS
+- Deploys to iOS simulator
+- Serves as smoke test for app deployment
+
+### Workflow Triggers
+
+All workflows trigger on:
+- Push to `main` or `develop` branches
+- Pull requests to `main` or `develop` branches
+- Manual workflow dispatch
+
+### Test Execution in CI
+
+**Android Tests:**
+- Executed in Android emulator (API 33, x86_64, Pixel 6 profile)
+- Automated via `reactivecircus/android-emulator-runner` action
+- Test results uploaded as TRX files
+
+**iOS Tests:**
+- Executed in iOS simulator (iPhone 15)
 - Requires macOS runner
-- Use iOS simulator
-- Run: `dotnet test -f net10.0-ios`
+- Test results uploaded as TRX files
+- Simulator lifecycle managed automatically
+
+### Viewing Test Results
+
+Test results are available as workflow artifacts:
+- `test-results-ubuntu-android` - Android unit test results
+- `test-results-macos-ios` - iOS unit test results
+- `ui-tests-apk` - Built Android UI test APK
+
+Download artifacts from the Actions tab in GitHub to view detailed test results.
 
 ## Test Coverage
 
