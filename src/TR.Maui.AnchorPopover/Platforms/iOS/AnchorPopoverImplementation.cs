@@ -81,6 +81,11 @@ internal class AnchorPopoverImplementation : IAnchorPopover
 
         _dismissTaskCompletionSource = new TaskCompletionSource<bool>();
 
+        // Get the current view controller
+        var currentViewController = GetCurrentViewController(mauiContext);
+        if (currentViewController == null)
+            throw new InvalidOperationException("Unable to get current view controller.");
+
         // Convert MAUI view to native view
         var nativeView = content.ToPlatform(mauiContext);
         if (nativeView == null)
@@ -110,7 +115,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         // Configure as popover
         contentViewController.ModalPresentationStyle = UIModalPresentationStyle.Popover;
         var popoverController = contentViewController.PopoverPresentationController;
-        
+
         if (popoverController != null)
         {
             // Set anchor
@@ -121,8 +126,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
             }
             else if (anchorBounds.HasValue)
             {
-                var window = UIApplication.SharedApplication.KeyWindow;
-                popoverController.SourceView = window?.RootViewController?.View;
+                popoverController.SourceView = currentViewController.View!;
                 popoverController.SourceRect = anchorBounds.Value;
             }
 
@@ -143,11 +147,6 @@ internal class AnchorPopoverImplementation : IAnchorPopover
             });
             popoverController.Delegate = delegateHandler;
         }
-
-        // Get the current view controller
-        var currentViewController = GetCurrentViewController(mauiContext);
-        if (currentViewController == null)
-            throw new InvalidOperationException("Unable to get current view controller.");
 
         // Present the popover
         _popoverViewController = contentViewController;
@@ -178,18 +177,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
 
     private static UIViewController? GetCurrentViewController(IMauiContext mauiContext)
     {
-        var window = UIApplication.SharedApplication.KeyWindow;
-        var rootViewController = window?.RootViewController;
-
-        if (rootViewController == null)
-            return null;
-
-        while (rootViewController.PresentedViewController != null)
-        {
-            rootViewController = rootViewController.PresentedViewController;
-        }
-
-        return rootViewController;
+        return Platform.GetCurrentUIViewController();
     }
 
     private class PopoverDelegate : UIPopoverPresentationControllerDelegate

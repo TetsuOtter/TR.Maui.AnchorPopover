@@ -88,17 +88,17 @@ internal class AnchorPopoverImplementation : IAnchorPopover
 
         // Measure content
         var size = content.Measure(double.PositiveInfinity, double.PositiveInfinity);
-        var width = options.PreferredWidth.HasValue 
-            ? (int)(options.PreferredWidth.Value * context.Resources.DisplayMetrics.Density)
-            : (size.Width > 0 ? (int)(size.Width * context.Resources.DisplayMetrics.Density) : ViewGroup.LayoutParams.WrapContent);
-        
+        var width = options.PreferredWidth.HasValue
+            ? (int)(options.PreferredWidth.Value * context.Resources!.DisplayMetrics!.Density)
+            : (size.Width > 0 ? (int)(size.Width * context.Resources!.DisplayMetrics!.Density) : ViewGroup.LayoutParams.WrapContent);
+
         var height = options.PreferredHeight.HasValue
-            ? (int)(options.PreferredHeight.Value * context.Resources.DisplayMetrics.Density)
-            : (size.Height > 0 ? (int)(size.Height * context.Resources.DisplayMetrics.Density) : ViewGroup.LayoutParams.WrapContent);
+            ? (int)(options.PreferredHeight.Value * context.Resources!.DisplayMetrics!.Density)
+            : (size.Height > 0 ? (int)(size.Height * context.Resources!.DisplayMetrics!.Density) : ViewGroup.LayoutParams.WrapContent);
 
         // Create popup window
         _popupWindow = new PopupWindow(nativeView, width, height, true);
-        
+
         // Configure popup appearance
         _popupWindow.OutsideTouchable = options.DismissOnTapOutside;
         _popupWindow.Focusable = true;
@@ -106,7 +106,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         // Set background with elevation for shadow effect (Material Design style)
         var drawable = new GradientDrawable();
         drawable.SetCornerRadius(8 * context.Resources.DisplayMetrics.Density);
-        
+
         if (options.BackgroundColor != null)
         {
             drawable.SetColor(options.BackgroundColor.ToPlatform());
@@ -115,9 +115,9 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         {
             drawable.SetColor(global::Android.Graphics.Color.White);
         }
-        
-        _popupWindow.SetBackgroundDrawable(drawable);
-        _popupWindow.Elevation = 8 * context.Resources.DisplayMetrics.Density;
+
+        _popupWindow!.SetBackgroundDrawable(drawable);
+        _popupWindow!.Elevation = 8 * context.Resources!.DisplayMetrics!.Density;
 
         // Handle dismissal
         _popupWindow.DismissEvent += (s, e) =>
@@ -213,7 +213,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
             x -= _popupWindow.Width;
         }
 
-        _popupWindow.ShowAtLocation(rootView, GravityFlags.NoGravity, x, y);
+        _popupWindow!.ShowAtLocation(rootView, GravityFlags.NoGravity, x, y);
     }
 
     private static GravityFlags GetGravity(PopoverArrowDirection direction)
