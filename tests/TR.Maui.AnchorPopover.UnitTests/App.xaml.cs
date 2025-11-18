@@ -5,9 +5,11 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+    }
 
-        // For unit tests, we don't need a UI
-        MainPage = new ContentPage
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        return new Window(new ContentPage
         {
             Content = new Label
             {
@@ -15,6 +17,6 @@ public partial class App : Application
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center
             }
-        };
+        });
     }
 }
