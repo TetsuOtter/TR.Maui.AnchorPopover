@@ -56,14 +56,16 @@ TR.Maui.AnchorPopover/
 ### 2. Platform Implementations
 
 #### iOS/MacCatalyst
+
 - Implementation: `UIPopoverPresentationController`
 - Features:
   - Native iOS popover appearance
   - Full arrow direction support
   - Automatic repositioning
   - Adaptive presentation handling
-  
+
 #### Android
+
 - Implementation: `PopupWindow`
 - Features:
   - Material Design styling
@@ -72,6 +74,7 @@ TR.Maui.AnchorPopover/
   - Positioning based on arrow direction
 
 #### Windows
+
 - Implementation: `Flyout`
 - Features:
   - Fluent Design principles
@@ -140,33 +143,37 @@ public class PopoverOptions
 ## Quality Assurance
 
 ### Security
+
 - ✅ CodeQL security scan: 0 vulnerabilities found
 - ✅ GitHub Actions permissions properly configured
 - ✅ No hardcoded secrets or sensitive data
 
 ### Build Status
+
 - ✅ Debug build: Successful
 - ✅ Release build: Successful
 - ✅ Multi-platform compilation: Successful
 - ⚠️ Warnings: Only nullable reference warnings (acceptable)
 
 ### Testing
+
 - Sample application demonstrates all major features
 - Manual testing required on physical devices for each platform
 
 ## Platform Requirements
 
-| Platform | Minimum Version | SDK Version |
-|----------|----------------|-------------|
-| iOS | 15.0 | iOS SDK 26.1 |
-| macOS | 15.0 (via Catalyst) | iOS SDK 26.1 |
-| Android | API 21 (5.0 Lollipop) | Android SDK 36.1 |
-| Windows | 10.0.17763.0 | Windows SDK 10.0 |
-| .NET | 10.0 | .NET 10.0 SDK |
+| Platform | Minimum Version       | SDK Version      |
+| -------- | --------------------- | ---------------- |
+| iOS      | 12.2                  | iOS SDK 26.1     |
+| macOS    | 15.0 (via Catalyst)   | iOS SDK 26.1     |
+| Android  | API 21 (5.0 Lollipop) | Android SDK 36.1 |
+| Windows  | 10.0.17763.0          | Windows SDK 10.0 |
+| .NET     | 10.0                  | .NET 10.0 SDK    |
 
 ## NuGet Package
 
 ### Package Metadata
+
 - **Package ID**: TR.Maui.AnchorPopover
 - **Version**: 1.0.0
 - **Authors**: TetsuOtter
@@ -174,6 +181,7 @@ public class PopoverOptions
 - **Tags**: maui, popover, anchor, ios, android, windows, macos
 
 ### Package Contents
+
 - Multi-platform binaries
 - XML documentation
 - README.md
@@ -182,6 +190,7 @@ public class PopoverOptions
 ## Future Enhancements (Optional)
 
 ### Potential Improvements
+
 1. Unit tests for platform-agnostic logic
 2. UI tests using MAUI Test Framework
 3. Additional arrow styles
@@ -190,6 +199,7 @@ public class PopoverOptions
 6. Additional platforms (Tizen)
 
 ### Known Limitations
+
 1. iOS/iPadOS may show full-screen on iPhone in portrait mode (native behavior)
 2. Android arrow is simulated via positioning, not native
 3. Windows positioning requires elements in visual tree
@@ -198,6 +208,7 @@ public class PopoverOptions
 ## Success Criteria Met
 
 ✅ All requirements from the problem statement have been implemented:
+
 - ✅ .NET 10 + MAUI library
 - ✅ Native popover handling for iOS/macOS
 - ✅ Fallback implementations for Android/Windows

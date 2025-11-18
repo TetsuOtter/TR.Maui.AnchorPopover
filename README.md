@@ -9,7 +9,7 @@ A .NET MAUI library for displaying native popovers with anchor support across iO
   - Android: `PopupWindow` with Material Design styling
   - Windows: `Flyout` controls
 - 🎯 **Anchor Support**: Anchor popovers to specific MAUI views or screen positions
-- 📱 **Cross-Platform**: Works on iOS 15+, Android 21+, Windows 10+, and macOS
+- 📱 **Cross-Platform**: Works on iOS 12.2+, Android 21+, Windows 10.0.17763.0+, and macOS Catalyst 15+
 - 🎨 **Customizable**: Configure arrow direction, size, background color, and dismissal behavior
 - 🔧 **Easy to Use**: Simple, intuitive API
 
@@ -101,25 +101,25 @@ Factory method to create a platform-specific popover instance.
 #### Methods
 
 - **`ShowAsync(View content, View anchor, PopoverOptions? options = null)`**
-  
+
   Shows a popover with the specified content, anchored to the given view.
-  
+
   - `content`: The MAUI view to display in the popover
   - `anchor`: The view to anchor the popover to
   - `options`: Optional configuration for the popover
   - Returns: A task that completes when the popover is dismissed
 
 - **`ShowAsync(View content, Rect anchorBounds, PopoverOptions? options = null)`**
-  
+
   Shows a popover with the specified content, anchored to a specific location.
-  
+
   - `content`: The MAUI view to display in the popover
   - `anchorBounds`: The rectangle (in screen coordinates) to anchor the popover to
   - `options`: Optional configuration for the popover
   - Returns: A task that completes when the popover is dismissed
 
 - **`Dismiss()`**
-  
+
   Dismisses the currently displayed popover.
 
 #### Properties
@@ -133,6 +133,7 @@ Configuration options for displaying a popover.
 #### Properties
 
 - **`ArrowDirection`**: Preferred arrow direction (`PopoverArrowDirection` enum)
+
   - `Any` (default): System chooses the best direction
   - `Up`: Arrow points upward
   - `Down`: Arrow points downward
@@ -181,18 +182,23 @@ Check out the [sample application](./samples/TR.Maui.AnchorPopover.Sample) for c
 The library includes comprehensive test coverage:
 
 ### Unit Tests
+
 Located in `tests/TR.Maui.AnchorPopover.UnitTests`, these tests cover:
+
 - `PopoverOptions` configuration
 - `PopoverArrowDirection` enum behavior
 - Factory method functionality
 
 Run unit tests (requires Android emulator/device or other platform):
+
 ```bash
 dotnet test tests/TR.Maui.AnchorPopover.UnitTests/TR.Maui.AnchorPopover.UnitTests.csproj
 ```
 
 ### UI Tests
+
 Located in `tests/TR.Maui.AnchorPopover.UITests`, this interactive app provides manual testing scenarios:
+
 - Basic popover rendering
 - Custom content display
 - Arrow direction configuration
@@ -200,6 +206,7 @@ Located in `tests/TR.Maui.AnchorPopover.UITests`, this interactive app provides 
 - Interactive element functionality
 
 Run the UI test app:
+
 ```bash
 # Android
 dotnet build -t:Run -f net10.0-android tests/TR.Maui.AnchorPopover.UITests/TR.Maui.AnchorPopover.UITests.csproj
@@ -221,6 +228,11 @@ These workflows run automatically on pushes and pull requests to `main` and `dev
 
 - .NET 10.0 or later
 - .NET MAUI workload installed
+- **Platform Minimum Versions:**
+  - iOS 12.2+
+  - macOS Catalyst 15+
+  - Android API 21+ (Android 5.0 Lollipop)
+  - Windows 10.0.17763.0+ (Windows 10 version 1809)
 
 ## Building from Source
 
