@@ -176,6 +176,37 @@ Configuration options for displaying a popover.
 
 Check out the [sample application](./samples/TR.Maui.AnchorPopover.Sample) for complete examples of all features.
 
+## Testing
+
+The library includes comprehensive test coverage:
+
+### Unit Tests
+Located in `tests/TR.Maui.AnchorPopover.UnitTests`, these tests cover:
+- `PopoverOptions` configuration
+- `PopoverArrowDirection` enum behavior
+- Factory method functionality
+
+Run unit tests (requires Android emulator/device or other platform):
+```bash
+dotnet test tests/TR.Maui.AnchorPopover.UnitTests/TR.Maui.AnchorPopover.UnitTests.csproj
+```
+
+### UI Tests
+Located in `tests/TR.Maui.AnchorPopover.UITests`, this interactive app provides manual testing scenarios:
+- Basic popover rendering
+- Custom content display
+- Arrow direction configuration
+- Position-based anchoring
+- Interactive element functionality
+
+Run the UI test app:
+```bash
+# Android
+dotnet build -t:Run -f net10.0-android tests/TR.Maui.AnchorPopover.UITests/TR.Maui.AnchorPopover.UITests.csproj
+```
+
+See the [Unit Tests README](./tests/TR.Maui.AnchorPopover.UnitTests/README.md) and [UI Tests README](./tests/TR.Maui.AnchorPopover.UITests/README.md) for detailed information.
+
 ## Requirements
 
 - .NET 10.0 or later
