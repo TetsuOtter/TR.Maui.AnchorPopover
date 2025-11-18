@@ -43,7 +43,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         if (content == null)
             throw new ArgumentNullException(nameof(content));
 
-        var mauiContext = content.Handler?.MauiContext;
+        var mauiContext = content.Handler?.MauiContext ?? Application.Current?.Windows[0]?.Page?.Handler?.MauiContext;
         if (mauiContext == null)
             throw new InvalidOperationException("Unable to get MauiContext from content view.");
 
