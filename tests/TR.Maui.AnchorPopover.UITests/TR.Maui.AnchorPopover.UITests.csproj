@@ -1,10 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!-- Only target Android on Linux build environment for UI tests -->
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('linux'))">net10.0-android</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">net10.0-android;net10.0-windows10.0.17763.0</TargetFrameworks>
+		<!-- Support both .NET 8 and .NET 10 with platform-specific MAUI targets -->
+		<CheckEolWorkloads>false</CheckEolWorkloads>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('linux'))">net8.0-android;net10.0-android</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">net8.0-android;net8.0-ios;net8.0-maccatalyst;net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">net8.0-android;net8.0-windows10.0.17763.0;net10.0-android;net10.0-windows10.0.17763.0</TargetFrameworks>
+
+		<!-- Suppress SDK warning about .NET 8 MAUI being EOL for this project -->
+		<SuppressOutOfSupportEolTargetFrameworkWarning>true</SuppressOutOfSupportEolTargetFrameworkWarning>
 
 		<!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.

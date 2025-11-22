@@ -1,0 +1,17 @@
+<Project>
+
+  <!-- MAUI Version configuration for .NET 8 and .NET 10 -->
+  <Choose>
+    <When Condition="'$(TargetFramework)' != '' And $(TargetFramework.StartsWith('net8'))">
+      <PropertyGroup>
+        <MauiVersion>8.0.92</MauiVersion>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <MauiVersion>10.0.0</MauiVersion>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+</Project>
