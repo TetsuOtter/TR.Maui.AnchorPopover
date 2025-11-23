@@ -108,7 +108,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Install MAUI Workload
-        run: dotnet workload restore
+        run: dotnet workload install maui-windows
 
       - name: Set Version
         if: github.event_name == 'workflow_dispatch'
