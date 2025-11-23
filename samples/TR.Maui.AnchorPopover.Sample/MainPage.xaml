@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TR.Maui.AnchorPopover.Sample.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+            
+            <Label
+                Text="TR.Maui.AnchorPopover Sample"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+            <Label
+                Text="This sample demonstrates native popover functionality with anchor support."
+                Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level2" />
+
+            <Button
+                x:Name="SimplePopoverBtn"
+                Text="Show Simple Popover" 
+                SemanticProperties.Hint="Shows a simple popover anchored to this button"
+                Clicked="OnSimplePopoverClicked"
+                HorizontalOptions="Fill"
+                Margin="0,20,0,0" />
+
+            <Button
+                x:Name="CustomContentBtn"
+                Text="Show Custom Content Popover" 
+                SemanticProperties.Hint="Shows a popover with custom MAUI content"
+                Clicked="OnCustomContentClicked"
+                HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="PositionedPopoverBtn"
+                Text="Show Positioned Popover" 
+                SemanticProperties.Hint="Shows a popover at a specific position"
+                Clicked="OnPositionedPopoverClicked"
+                HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="ArrowDirectionBtn"
+                Text="Show Popover with Arrow Direction" 
+                SemanticProperties.Hint="Shows a popover with specified arrow direction"
+                Clicked="OnArrowDirectionClicked"
+                HorizontalOptions="Fill" />
+
+            <Label
+                x:Name="StatusLabel"
+                Text="Tap any button to see a popover"
+                FontSize="14"
+                TextColor="Gray"
+                Margin="0,20,0,0"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

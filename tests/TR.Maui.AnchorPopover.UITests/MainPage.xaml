@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TR.Maui.AnchorPopover.UITests.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+            
+            <Label
+                Text="AnchorPopover UI Tests"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+            <Label
+                Text="Visual tests for popover functionality"
+                Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level2" />
+
+            <Button
+                x:Name="BasicPopoverBtn"
+                Text="Test 1: Basic Popover" 
+                Clicked="OnBasicPopoverClicked"
+                HorizontalOptions="Fill"
+                Margin="0,20,0,0" />
+
+            <Button
+                x:Name="CustomContentBtn"
+                Text="Test 2: Custom Content" 
+                Clicked="OnCustomContentClicked"
+                HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="ArrowDirectionBtn"
+                Text="Test 3: Arrow Directions" 
+                Clicked="OnArrowDirectionClicked"
+                HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="PositionedPopoverBtn"
+                Text="Test 4: Positioned Popover" 
+                Clicked="OnPositionedPopoverClicked"
+                HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="InteractiveBtn"
+                Text="Test 5: Interactive Content" 
+                Clicked="OnInteractiveClicked"
+                HorizontalOptions="Fill" />
+
+            <Label
+                x:Name="StatusLabel"
+                Text="Ready"
+                FontSize="14"
+                TextColor="Gray"
+                Margin="0,20,0,0"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Instructions:"
+                FontAttributes="Bold"
+                Margin="0,20,0,0" />
+
+            <Label
+                Text="1. Tap each test button&#10;2. Verify the popover appears&#10;3. Check arrow direction&#10;4. Verify dismiss behavior&#10;5. Test interactive elements"
+                FontSize="12"
+                LineBreakMode="WordWrap" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

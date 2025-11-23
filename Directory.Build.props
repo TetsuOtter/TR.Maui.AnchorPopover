@@ -1,0 +1,8 @@
+<Project>
+
+  <!-- MAUI Version configuration for .NET 9 -->
+  <PropertyGroup>
+    <MauiVersion>9.0.0</MauiVersion>
+  </PropertyGroup>
+
+</Project>

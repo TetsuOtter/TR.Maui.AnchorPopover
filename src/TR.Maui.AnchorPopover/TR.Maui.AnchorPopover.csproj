@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Library targets platform-specific frameworks for MAUI -->
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('linux'))">net9.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">net9.0-android;net9.0-ios;net9.0-maccatalyst;net9.0-windows10.0.17763.0</TargetFrameworks>
+
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+
+    <!-- NuGet Package Properties -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>TR.Maui.AnchorPopover</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>TetsuOtter</Authors>
+    <Description>A .NET MAUI library for displaying native popovers with anchor support across iOS, macOS, Android, and Windows platforms.</Description>
+    <PackageProjectUrl>https://github.com/TetsuOtter/TR.Maui.AnchorPopover</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TetsuOtter/TR.Maui.AnchorPopover</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>maui;popover;anchor;ios;android;windows;macos</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">12.2</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <PublishTrimmed>false</PublishTrimmed>
+    <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="*.cs" />
+    <Compile Include="Platforms\Android\*.cs" />
+    <Compile Include="Platforms\iOS\*.cs" />
+    <Compile Include="Platforms\MacCatalyst\*.cs" />
+    <Compile Include="Platforms\Windows\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
