@@ -50,7 +50,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         await ShowPopoverAsync(content, mauiContext, null, anchorBounds, options);
     }
 
-    public void Dismiss()
+    public Task DismissAsync()
     {
         if (_popupWindow?.IsShowing == true)
         {
@@ -58,6 +58,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
             _dismissTaskCompletionSource?.TrySetResult(true);
             _popupWindow = null;
         }
+        return Task.CompletedTask;
     }
 
     private async Task ShowPopoverAsync(
@@ -72,7 +73,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         // Dismiss any existing popover
         if (_popupWindow?.IsShowing == true)
         {
-            Dismiss();
+            await DismissAsync();
         }
 
         _dismissTaskCompletionSource = new TaskCompletionSource<bool>();

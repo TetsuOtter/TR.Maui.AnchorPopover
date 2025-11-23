@@ -49,7 +49,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         await ShowFlyoutAsync(content, mauiContext, null, anchorBounds, options);
     }
 
-    public void Dismiss()
+    public Task DismissAsync()
     {
         if (_flyout != null)
         {
@@ -57,6 +57,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
             _dismissTaskCompletionSource?.TrySetResult(true);
             _flyout = null;
         }
+        return Task.CompletedTask;
     }
 
     private async Task ShowFlyoutAsync(
@@ -71,7 +72,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         // Dismiss any existing flyout
         if (_flyout != null)
         {
-            Dismiss();
+            await DismissAsync();
         }
 
         _dismissTaskCompletionSource = new TaskCompletionSource<bool>();

@@ -2,6 +2,8 @@
 
 public partial class MainPage : ContentPage
 {
+	private Guid? _currentPopoverId;
+
 	public MainPage()
 	{
 		InitializeComponent();
@@ -12,9 +14,11 @@ public partial class MainPage : ContentPage
 		try
 		{
 			StatusLabel.Text = "Showing simple popover...";
-			
+
 			var popover = AnchorPopover.Create();
-			
+			var popoverId = Guid.NewGuid();
+			_currentPopoverId = popoverId;
+
 			// Create simple label content
 			var content = new Label
 			{
@@ -24,23 +28,27 @@ public partial class MainPage : ContentPage
 			};
 
 			await popover.ShowAsync(content, SimplePopoverBtn);
-			
-			StatusLabel.Text = "Popover dismissed";
+
+			if (_currentPopoverId == popoverId)
+			{
+				StatusLabel.Text = "Popover dismissed";
+			}
 		}
 		catch (Exception ex)
 		{
 			StatusLabel.Text = $"Error: {ex.Message}";
 		}
 	}
-
 	private async void OnCustomContentClicked(object? sender, EventArgs e)
 	{
 		try
 		{
 			StatusLabel.Text = "Showing custom content popover...";
-			
+
 			var popover = AnchorPopover.Create();
-			
+			var popoverId = Guid.NewGuid();
+			_currentPopoverId = popoverId;
+
 			// Create custom content with multiple elements
 			var content = new VerticalStackLayout
 			{
@@ -51,10 +59,10 @@ public partial class MainPage : ContentPage
 					new Label { Text = "Custom Popover", FontSize = 18, FontAttributes = FontAttributes.Bold },
 					new Label { Text = "This popover contains multiple MAUI controls", FontSize = 14 },
 					new Entry { Placeholder = "Type something...", WidthRequest = 250 },
-					new Button 
-					{ 
-						Text = "Close", 
-						Command = new Command(() => popover.Dismiss())
+					new Button
+					{
+						Text = "Close",
+						Command = new Command(async () => await popover.DismissAsync())
 					}
 				}
 			};
@@ -66,8 +74,11 @@ public partial class MainPage : ContentPage
 			};
 
 			await popover.ShowAsync(content, CustomContentBtn, options);
-			
-			StatusLabel.Text = "Custom popover dismissed";
+
+			if (_currentPopoverId == popoverId)
+			{
+				StatusLabel.Text = "Custom popover dismissed";
+			}
 		}
 		catch (Exception ex)
 		{
@@ -80,9 +91,11 @@ public partial class MainPage : ContentPage
 		try
 		{
 			StatusLabel.Text = "Showing positioned popover...";
-			
+
 			var popover = AnchorPopover.Create();
-			
+			var popoverId = Guid.NewGuid();
+			_currentPopoverId = popoverId;
+
 			var content = new Label
 			{
 				Text = "This popover is positioned at a specific location",
@@ -99,8 +112,11 @@ public partial class MainPage : ContentPage
 			);
 
 			await popover.ShowAsync(content, bounds);
-			
-			StatusLabel.Text = "Positioned popover dismissed";
+
+			if (_currentPopoverId == popoverId)
+			{
+				StatusLabel.Text = "Positioned popover dismissed";
+			}
 		}
 		catch (Exception ex)
 		{
@@ -113,9 +129,11 @@ public partial class MainPage : ContentPage
 		try
 		{
 			StatusLabel.Text = "Showing popover with arrow direction...";
-			
+
 			var popover = AnchorPopover.Create();
-			
+			var popoverId = Guid.NewGuid();
+			_currentPopoverId = popoverId;
+
 			var content = new Label
 			{
 				Text = "This popover prefers to show above the button with an upward arrow",
@@ -131,8 +149,11 @@ public partial class MainPage : ContentPage
 			};
 
 			await popover.ShowAsync(content, ArrowDirectionBtn, options);
-			
-			StatusLabel.Text = "Arrow direction popover dismissed";
+
+			if (_currentPopoverId == popoverId)
+			{
+				StatusLabel.Text = "Arrow direction popover dismissed";
+			}
 		}
 		catch (Exception ex)
 		{

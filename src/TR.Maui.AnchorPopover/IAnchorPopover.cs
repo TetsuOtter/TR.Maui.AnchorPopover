@@ -26,7 +26,8 @@ public interface IAnchorPopover
     /// <summary>
     /// Dismisses the currently displayed popover.
     /// </summary>
-    void Dismiss();
+    /// <returns>A task that completes when the popover is dismissed.</returns>
+    Task DismissAsync();
 
     /// <summary>
     /// Gets a value indicating whether a popover is currently being displayed.

@@ -5,27 +5,34 @@ namespace TR.Maui.AnchorPopover;
 /// </summary>
 public static class AnchorPopover
 {
+        private static IAnchorPopover? _instance;
+
         /// <summary>
         /// Creates a new instance of IAnchorPopover for the current platform.
         /// </summary>
         /// <returns>A platform-specific implementation of IAnchorPopover.</returns>
         public static IAnchorPopover Create()
         {
+                if (_instance != null)
+                {
+                        return _instance;
+                }
+
 #if TEST
-        return new TestAnchorPopoverImplementation();
+        _instance = new TestAnchorPopoverImplementation();
 #elif ANDROID
-                return new Platforms.Android.AnchorPopoverImplementation();
+        _instance = new Platforms.Android.AnchorPopoverImplementation();
 #elif IOS || MACCATALYST
-        return new Platforms.iOS.AnchorPopoverImplementation();
+                _instance = new Platforms.iOS.AnchorPopoverImplementation();
 #elif WINDOWS
-        return new Platforms.Windows.AnchorPopoverImplementation();
+        _instance = new Platforms.Windows.AnchorPopoverImplementation();
 #else
         throw new PlatformNotSupportedException("AnchorPopover is not supported on this platform.");
 #endif
-        }
-}
 
-/// <summary>
+                return _instance;
+        }
+}/// <summary>
 /// Test implementation of IAnchorPopover for unit testing.
 /// </summary>
 internal class TestAnchorPopoverImplementation : IAnchorPopover
@@ -44,8 +51,9 @@ internal class TestAnchorPopoverImplementation : IAnchorPopover
                 return Task.CompletedTask;
         }
 
-        public void Dismiss()
+        public Task DismissAsync()
         {
                 IsShowing = false;
+                return Task.CompletedTask;
         }
 }

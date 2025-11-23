@@ -52,15 +52,29 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         await ShowPopoverAsync(content, mauiContext, null, nativeBounds, options);
     }
 
-    public void Dismiss()
+    public async Task DismissAsync()
     {
-        if (_popoverViewController != null)
+        if (_popoverViewController == null)
         {
-            _popoverViewController.DismissViewController(true, () =>
-            {
-                _dismissTaskCompletionSource?.TrySetResult(true);
-                _popoverViewController = null;
-            });
+            return;
+        }
+
+        var tcs = new TaskCompletionSource<bool>();
+        _popoverViewController.DismissViewController(true, () =>
+        {
+            _dismissTaskCompletionSource?.TrySetResult(true);
+            _popoverViewController = null;
+            tcs.TrySetResult(true);
+        });
+
+        // Wait for dismissal with timeout
+        var timeoutTask = Task.Delay(1000);
+        var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
+        if (completedTask == timeoutTask)
+        {
+            // Timeout occurred, force completion
+            _dismissTaskCompletionSource?.TrySetResult(true);
+            _popoverViewController = null;
         }
     }
 
@@ -76,7 +90,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         // Dismiss any existing popover
         if (_popoverViewController != null)
         {
-            Dismiss();
+            await DismissAsync();
         }
 
         _dismissTaskCompletionSource = new TaskCompletionSource<bool>();
