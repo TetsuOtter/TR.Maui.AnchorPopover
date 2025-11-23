@@ -177,13 +177,13 @@ jobs:
       - name: Pack
         run: dotnet pack src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-build --output ./final-artifacts
 
-      - name: Push to NuGet
-        run: dotnet nuget push ./final-artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-
       - name: Upload Package Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: nuget-packages
           path: ./final-artifacts/*.nupkg
+
+      - name: Push to NuGet
+        run: dotnet nuget push ./final-artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
