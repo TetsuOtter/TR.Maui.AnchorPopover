@@ -4,6 +4,7 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Graphics.Platform;
 using Windows.Foundation;
+using Windows.UI;
 
 namespace TR.Maui.AnchorPopover.Platforms.Windows;
 
@@ -108,7 +109,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         
         if (options.BackgroundColor != null)
         {
-            var color = Microsoft.UI.Xaml.Media.Color.FromArgb(
+            var color = Windows.UI.Color.FromArgb(
                 (byte)(options.BackgroundColor.Alpha * 255),
                 (byte)(options.BackgroundColor.Red * 255),
                 (byte)(options.BackgroundColor.Green * 255),
@@ -124,7 +125,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.FlyoutPresenter.BorderThicknessProperty, new Microsoft.UI.Xaml.Thickness(1)));
         flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(
             Microsoft.UI.Xaml.Controls.FlyoutPresenter.BorderBrushProperty,
-            new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Xaml.Colors.LightGray)
+            new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.LightGray)
         ));
         flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.FlyoutPresenter.CornerRadiusProperty, new Microsoft.UI.Xaml.CornerRadius(8)));
         
@@ -159,9 +160,9 @@ internal class AnchorPopoverImplementation : IAnchorPopover
 
                 // Note: In a real scenario, you'd need to add this to a canvas or absolute positioned container
                 // For simplicity, we'll just use the ShowAt method with the root element
-                _flyout.ShowAt(rootElement, new FlyoutShowOptions
+                _flyout.ShowAt(rootElement, new Microsoft.UI.Xaml.Controls.FlyoutShowOptions
                 {
-                    Position = new global::Windows.Foundation.Point(anchorBounds.Value.X, anchorBounds.Value.Y),
+                    Position = new Windows.Foundation.Point(anchorBounds.Value.X, anchorBounds.Value.Y),
                     Placement = _flyout.Placement
                 });
             }
