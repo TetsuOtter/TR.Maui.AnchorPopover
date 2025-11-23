@@ -12,9 +12,9 @@ public partial class MainPage : ContentPage
 		try
 		{
 			StatusLabel.Text = "Test 1: Showing basic popover...";
-			
+
 			var popover = AnchorPopover.Create();
-			
+
 			var content = new Label
 			{
 				Text = "✓ Basic popover test\n\nThis is a simple text popover anchored to the button above.",
@@ -24,7 +24,7 @@ public partial class MainPage : ContentPage
 			};
 
 			await popover.ShowAsync(content, BasicPopoverBtn);
-			
+
 			StatusLabel.Text = "Test 1: ✓ Passed - Basic popover displayed";
 		}
 		catch (Exception ex)
@@ -38,9 +38,9 @@ public partial class MainPage : ContentPage
 		try
 		{
 			StatusLabel.Text = "Test 2: Showing custom content...";
-			
+
 			var popover = AnchorPopover.Create();
-			
+
 			var content = new VerticalStackLayout
 			{
 				Padding = 20,
@@ -51,10 +51,10 @@ public partial class MainPage : ContentPage
 					new Label { Text = "This popover contains multiple controls:", FontSize = 14 },
 					new Entry { Placeholder = "Test input", WidthRequest = 250 },
 					new Label { Text = "• Label ✓\n• Entry ✓\n• Button ✓", FontSize = 12 },
-					new Button 
-					{ 
-						Text = "Close", 
-						Command = new Command(() => popover.Dismiss())
+					new Button
+					{
+						Text = "Close",
+						Command = new Command(async () => await popover.DismissAsync())
 					}
 				}
 			};
@@ -66,7 +66,7 @@ public partial class MainPage : ContentPage
 			};
 
 			await popover.ShowAsync(content, CustomContentBtn, options);
-			
+
 			StatusLabel.Text = "Test 2: ✓ Passed - Custom content displayed";
 		}
 		catch (Exception ex)
@@ -80,9 +80,9 @@ public partial class MainPage : ContentPage
 		try
 		{
 			StatusLabel.Text = "Test 3: Showing arrow direction test...";
-			
+
 			var popover = AnchorPopover.Create();
-			
+
 			var content = new Label
 			{
 				Text = "✓ Arrow Direction Test\n\nThis popover prefers to show above with an upward arrow.",
@@ -99,7 +99,7 @@ public partial class MainPage : ContentPage
 			};
 
 			await popover.ShowAsync(content, ArrowDirectionBtn, options);
-			
+
 			StatusLabel.Text = "Test 3: ✓ Passed - Arrow direction configured";
 		}
 		catch (Exception ex)
@@ -113,9 +113,9 @@ public partial class MainPage : ContentPage
 		try
 		{
 			StatusLabel.Text = "Test 4: Showing positioned popover...";
-			
+
 			var popover = AnchorPopover.Create();
-			
+
 			var content = new Label
 			{
 				Text = "✓ Positioned Popover Test\n\nThis popover is shown at screen coordinates.",
@@ -132,7 +132,7 @@ public partial class MainPage : ContentPage
 			);
 
 			await popover.ShowAsync(content, bounds);
-			
+
 			StatusLabel.Text = "Test 4: ✓ Passed - Positioned popover shown";
 		}
 		catch (Exception ex)
@@ -146,11 +146,11 @@ public partial class MainPage : ContentPage
 		try
 		{
 			StatusLabel.Text = "Test 5: Showing interactive content...";
-			
+
 			var popover = AnchorPopover.Create();
-			
-			var testLabel = new Label 
-			{ 
+
+			var testLabel = new Label
+			{
 				Text = "Interaction count: 0",
 				FontSize = 14,
 				HorizontalOptions = LayoutOptions.Center
@@ -166,25 +166,25 @@ public partial class MainPage : ContentPage
 				{
 					new Label { Text = "✓ Interactive Test", FontSize = 18, FontAttributes = FontAttributes.Bold },
 					testLabel,
-					new Button 
-					{ 
-						Text = "Interact", 
-						Command = new Command(() => 
+					new Button
+					{
+						Text = "Interact",
+						Command = new Command(() =>
 						{
 							interactionCount++;
 							testLabel.Text = $"Interaction count: {interactionCount}";
 						})
 					},
-					new Button 
-					{ 
-						Text = "Close & Verify", 
-						Command = new Command(() => 
+					new Button
+					{
+						Text = "Close & Verify",
+						Command = new Command(async () =>
 						{
 							if (interactionCount > 0)
 								StatusLabel.Text = $"Test 5: ✓ Passed - {interactionCount} interactions";
 							else
 								StatusLabel.Text = "Test 5: ✗ Failed - No interactions";
-							popover.Dismiss();
+							await popover.DismissAsync();
 						})
 					}
 				}

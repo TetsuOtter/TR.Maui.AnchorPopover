@@ -1,3 +1,6 @@
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
+
 namespace TR.Maui.AnchorPopover;
 
 /// <summary>
@@ -5,7 +8,6 @@ namespace TR.Maui.AnchorPopover;
 /// </summary>
 public static class AnchorPopover
 {
-        private static IAnchorPopover? _instance;
 
         /// <summary>
         /// Creates a new instance of IAnchorPopover for the current platform.
@@ -13,47 +15,16 @@ public static class AnchorPopover
         /// <returns>A platform-specific implementation of IAnchorPopover.</returns>
         public static IAnchorPopover Create()
         {
-                if (_instance != null)
-                {
-                        return _instance;
-                }
-
-#if TEST
-        _instance = new TestAnchorPopoverImplementation();
-#elif ANDROID
-        _instance = new Platforms.Android.AnchorPopoverImplementation();
-#elif IOS || MACCATALYST
-                _instance = new Platforms.iOS.AnchorPopoverImplementation();
+#if ANDROID
+        return new TR.Maui.AnchorPopover.Platforms.Android.AnchorPopoverImplementation();
+#elif IOS
+                return new TR.Maui.AnchorPopover.Platforms.iOS.AnchorPopoverImplementation();
+#elif MACCATALYST
+                return new TR.Maui.AnchorPopover.Platforms.MacCatalyst.AnchorPopoverImplementation();
 #elif WINDOWS
-        _instance = new Platforms.Windows.AnchorPopoverImplementation();
+        return new TR.Maui.AnchorPopover.Platforms.Windows.AnchorPopoverImplementation();
 #else
         throw new PlatformNotSupportedException("AnchorPopover is not supported on this platform.");
 #endif
-
-                return _instance;
-        }
-}/// <summary>
-/// Test implementation of IAnchorPopover for unit testing.
-/// </summary>
-internal class TestAnchorPopoverImplementation : IAnchorPopover
-{
-        public bool IsShowing { get; private set; }
-
-        public Task ShowAsync(View content, View anchor, PopoverOptions? options = null)
-        {
-                IsShowing = true;
-                return Task.CompletedTask;
-        }
-
-        public Task ShowAsync(View content, Rect anchorBounds, PopoverOptions? options = null)
-        {
-                IsShowing = true;
-                return Task.CompletedTask;
-        }
-
-        public Task DismissAsync()
-        {
-                IsShowing = false;
-                return Task.CompletedTask;
         }
 }

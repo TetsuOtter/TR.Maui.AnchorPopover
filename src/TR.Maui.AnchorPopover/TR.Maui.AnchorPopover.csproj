@@ -45,6 +45,7 @@
     <Compile Include="*.cs" />
     <Compile Include="Platforms\Android\*.cs" />
     <Compile Include="Platforms\iOS\*.cs" />
+    <Compile Include="Platforms\MacCatalyst\*.cs" />
     <Compile Include="Platforms\Windows\*.cs" />
   </ItemGroup>
 

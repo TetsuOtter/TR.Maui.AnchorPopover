@@ -2,7 +2,7 @@
 using Microsoft.Maui.Platform;
 using UIKit;
 
-namespace TR.Maui.AnchorPopover.Platforms.iOS;
+namespace TR.Maui.AnchorPopover.Platforms.MacCatalyst;
 
 /// <summary>
 /// iOS/MacCatalyst implementation of anchor popover using UIPopoverPresentationController.
