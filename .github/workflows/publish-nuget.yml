@@ -3,6 +3,10 @@ name: Publish to NuGet
 on:
   release:
     types: [published]
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
     inputs:
       version:
@@ -18,6 +22,11 @@ env:
   TARGET_FRAMEWORK_IOS: net9.0-ios
   TARGET_FRAMEWORK_MACCATALYST: net9.0-maccatalyst
   TARGET_FRAMEWORK_WINDOWS: net9.0-windows10.0.17763.0
+  TARGET_FRAMEWORKS_ALL: >
+    net9.0-android;
+    net9.0-ios;
+    net9.0-maccatalyst;
+    net9.0-windows10.0.17763.0
 
 jobs:
   build-android:
@@ -108,7 +117,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Install MAUI Workload
-        run: dotnet workload restore
+        run: dotnet workload install maui-windows
 
       - name: Set Version
         if: github.event_name == 'workflow_dispatch'
@@ -128,8 +137,10 @@ jobs:
           path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_WINDOWS }}/
 
   pack:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: [build-android, build-ios-maccatalyst, build-windows]
+    permissions:
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -139,16 +150,18 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install MAUI Workload
-        run: dotnet workload restore
-
       - name: Set Version
         if: github.event_name == 'workflow_dispatch'
         run: |
           sed -i 's/<Version>.*<\/Version>/<Version>${{ github.event.inputs.version }}<\/Version>/' src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
 
+      - name: Configure Target Frameworks for Packing
+        run: |
+          cp src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj.bak
+          (Get-Content src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj) -replace '<TargetFrameworks.*</TargetFrameworks>', '<TargetFrameworks>${{ env.TARGET_FRAMEWORKS_ALL }}</TargetFrameworks>' | Set-Content src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
+
       - name: Restore Dependencies
-        run: dotnet restore
+        run: dotnet restore src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
 
       - name: Download Android Artifacts
         uses: actions/download-artifact@v4
@@ -175,7 +188,11 @@ jobs:
           path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_WINDOWS }}/
 
       - name: Pack
-        run: dotnet pack src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-build --output ./final-artifacts
+        run: >
+          dotnet pack src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
+          --configuration Release
+          --no-build
+          --output ./final-artifacts
 
       - name: Upload Package Artifacts
         uses: actions/upload-artifact@v4
@@ -183,7 +200,13 @@ jobs:
           name: nuget-packages
           path: ./final-artifacts/*.nupkg
 
+      - name: NuGet login (OIDC → temp API key)
+        if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
       - name: Push to NuGet
-        run: dotnet nuget push ./final-artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+        run: dotnet nuget push ./final-artifacts/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
