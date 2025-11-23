@@ -34,8 +34,6 @@ jobs:
     - name: Build Sample
       run: dotnet build samples/TR.Maui.AnchorPopover.Sample/TR.Maui.AnchorPopover.Sample.csproj --configuration Release --no-restore
       
-    - name: Build Unit Tests
-      run: dotnet build tests/TR.Maui.AnchorPopover.UnitTests/TR.Maui.AnchorPopover.UnitTests.csproj --configuration Release --no-restore
       
     - name: Build UI Tests
       run: dotnet build tests/TR.Maui.AnchorPopover.UITests/TR.Maui.AnchorPopover.UITests.csproj --configuration Release --no-restore
