@@ -4,7 +4,6 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Graphics.Platform;
 using Windows.Foundation;
-using Windows.UI;
 
 namespace TR.Maui.AnchorPopover.Platforms.Windows;
 
@@ -109,7 +108,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         
         if (options.BackgroundColor != null)
         {
-            var color = Windows.UI.Color.FromArgb(
+            var color = global::Windows.UI.Color.FromArgb(
                 (byte)(options.BackgroundColor.Alpha * 255),
                 (byte)(options.BackgroundColor.Red * 255),
                 (byte)(options.BackgroundColor.Green * 255),
@@ -125,7 +124,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.FlyoutPresenter.BorderThicknessProperty, new Microsoft.UI.Xaml.Thickness(1)));
         flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(
             Microsoft.UI.Xaml.Controls.FlyoutPresenter.BorderBrushProperty,
-            new Microsoft.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.LightGray)
+            new Microsoft.UI.Xaml.Media.SolidColorBrush(global::Windows.UI.Colors.LightGray)
         ));
         flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.FlyoutPresenter.CornerRadiusProperty, new Microsoft.UI.Xaml.CornerRadius(8)));
         
@@ -145,27 +144,8 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         }
         else if (anchorBounds.HasValue)
         {
-            // For bounds-based positioning, we need to create a temporary anchor element
-            var window = mauiContext.Services.GetService<Microsoft.UI.Xaml.Window>();
-            if (window?.Content is Microsoft.UI.Xaml.FrameworkElement rootElement)
-            {
-                var tempAnchor = new Microsoft.UI.Xaml.Controls.Border
-                {
-                    Width = anchorBounds.Value.Width,
-                    Height = anchorBounds.Value.Height,
-                    Margin = new Microsoft.UI.Xaml.Thickness(anchorBounds.Value.X, anchorBounds.Value.Y, 0, 0),
-                    HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Left,
-                    VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Top
-                };
-
-                // Note: In a real scenario, you'd need to add this to a canvas or absolute positioned container
-                // For simplicity, we'll just use the ShowAt method with the root element
-                _flyout.ShowAt(rootElement, new Microsoft.UI.Xaml.Controls.FlyoutShowOptions
-                {
-                    Position = new Windows.Foundation.Point(anchorBounds.Value.X, anchorBounds.Value.Y),
-                    Placement = _flyout.Placement
-                });
-            }
+            // Bounds-based positioning is not implemented for Windows yet
+            throw new NotImplementedException("Bounds-based popover positioning is not supported on Windows.");
         }
 
         // Wait for dismissal
