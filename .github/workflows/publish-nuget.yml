@@ -10,12 +10,18 @@ on:
         required: true
         type: string
 
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
+env:
+  DOTNET_VERSION: "9.0.x"
+  XCODE_VERSION: "26.0"
+  ARTIFACT_PATH_BASE: src/TR.Maui.AnchorPopover/bin/Release
+  TARGET_FRAMEWORK_ANDROID: net9.0-android
+  TARGET_FRAMEWORK_IOS: net9.0-ios
+  TARGET_FRAMEWORK_MACCATALYST: net9.0-maccatalyst
+  TARGET_FRAMEWORK_WINDOWS: net9.0-windows10.0.17763.0
 
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,7 +29,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "9.0.x"
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Install MAUI Workload
         run: dotnet workload restore
@@ -36,14 +42,143 @@ jobs:
       - name: Restore Dependencies
         run: dotnet restore
 
-      - name: Build
-        run: dotnet build src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-restore
+      - name: Build Android
+        run: dotnet build src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --framework ${{ env.TARGET_FRAMEWORK_ANDROID }} --no-restore
+
+      - name: Upload Android Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-dlls
+          path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_ANDROID }}/
+
+  build-ios-maccatalyst:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ env.XCODE_VERSION }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install MAUI Workload
+        run: dotnet workload restore
+
+      - name: Set Version
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          sed -i '' 's/<Version>.*<\/Version>/<Version>${{ github.event.inputs.version }}<\/Version>/' src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build iOS
+        run: dotnet build src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --framework ${{ env.TARGET_FRAMEWORK_IOS }} --no-restore
+
+      - name: Build MacCatalyst
+        run: dotnet build src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --framework ${{ env.TARGET_FRAMEWORK_MACCATALYST }} --no-restore
+
+      - name: Upload iOS Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-dlls
+          path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_IOS }}/
+
+      - name: Upload MacCatalyst Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: maccatalyst-dlls
+          path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_MACCATALYST }}/
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install MAUI Workload
+        run: dotnet workload restore
+
+      - name: Set Version
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          (Get-Content src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj) -replace '<Version>.*</Version>', '<Version>${{ github.event.inputs.version }}</Version>' | Set-Content src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build Windows
+        run: dotnet build src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --framework ${{ env.TARGET_FRAMEWORK_WINDOWS }} --no-restore
+
+      - name: Upload Windows Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-dlls
+          path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_WINDOWS }}/
+
+  pack:
+    runs-on: ubuntu-latest
+    needs: [build-android, build-ios-maccatalyst, build-windows]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install MAUI Workload
+        run: dotnet workload restore
+
+      - name: Set Version
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          sed -i 's/<Version>.*<\/Version>/<Version>${{ github.event.inputs.version }}<\/Version>/' src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Download Android Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: android-dlls
+          path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_ANDROID }}/
+
+      - name: Download iOS Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-dlls
+          path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_IOS }}/
+
+      - name: Download MacCatalyst Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: maccatalyst-dlls
+          path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_MACCATALYST }}/
+
+      - name: Download Windows Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-dlls
+          path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_WINDOWS }}/
 
       - name: Pack
-        run: dotnet pack src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-build --output ./artifacts
+        run: dotnet pack src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-build --output ./final-artifacts
 
       - name: Push to NuGet
-        run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push ./final-artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
@@ -51,4 +186,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nuget-packages
-          path: ./artifacts/*.nupkg
+          path: ./final-artifacts/*.nupkg
