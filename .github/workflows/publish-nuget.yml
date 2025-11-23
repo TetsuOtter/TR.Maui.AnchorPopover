@@ -153,10 +153,6 @@ jobs:
         run: |
           sed -i 's/<Version>.*<\/Version>/<Version>${{ github.event.inputs.version }}<\/Version>/' src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
 
-      - name: Configure Target Frameworks for Packing
-        run: |
-          sed -i 's/<TargetFrameworks.*<\/TargetFrameworks>/<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst;net9.0-windows10.0.17763.0<\/TargetFrameworks>/' src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
-
       - name: Download Android Artifacts
         uses: actions/download-artifact@v4
         with:
@@ -182,7 +178,15 @@ jobs:
           path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_WINDOWS }}/
 
       - name: Pack
-        run: dotnet pack src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-build --output ./final-artifacts
+        run: >
+          dotnet pack src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
+          --configuration Release
+          --no-build
+          --framework ${{ env.TARGET_FRAMEWORK_ANDROID }}
+          --framework ${{ env.TARGET_FRAMEWORK_IOS }}
+          --framework ${{ env.TARGET_FRAMEWORK_MACCATALYST }}
+          --framework ${{ env.TARGET_FRAMEWORK_WINDOWS }}
+          --output ./final-artifacts
 
       - name: Upload Package Artifacts
         uses: actions/upload-artifact@v4
