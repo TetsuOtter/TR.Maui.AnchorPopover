@@ -1,5 +1,6 @@
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Devices;
 
 namespace TR.Maui.AnchorPopover;
 
@@ -18,7 +19,9 @@ public static class AnchorPopover
 #if ANDROID
         return new TR.Maui.AnchorPopover.Platforms.Android.AnchorPopoverImplementation();
 #elif IOS
-                return new TR.Maui.AnchorPopover.Platforms.iOS.AnchorPopoverImplementation();
+                return DeviceInfo.Idiom == DeviceIdiom.Phone
+                    ? new TR.Maui.AnchorPopover.Platforms.iOS.iPhoneAnchorPopoverImplementation()
+                    : (IAnchorPopover)new TR.Maui.AnchorPopover.Platforms.iOS.iPadAnchorPopoverImplementation();
 #elif MACCATALYST
                 return new TR.Maui.AnchorPopover.Platforms.MacCatalyst.AnchorPopoverImplementation();
 #elif WINDOWS

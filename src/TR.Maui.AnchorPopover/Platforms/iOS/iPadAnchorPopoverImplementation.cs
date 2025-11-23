@@ -5,9 +5,9 @@ using UIKit;
 namespace TR.Maui.AnchorPopover.Platforms.iOS;
 
 /// <summary>
-/// iOS/MacCatalyst implementation of anchor popover using UIPopoverPresentationController.
+/// iPad/MacCatalyst implementation of anchor popover using UIPopoverPresentationController.
 /// </summary>
-internal class AnchorPopoverImplementation : IAnchorPopover
+internal class iPadAnchorPopoverImplementation : IAnchorPopover
 {
     private UIViewController? _popoverViewController;
     private TaskCompletionSource<bool>? _dismissTaskCompletionSource;
@@ -95,6 +95,19 @@ internal class AnchorPopoverImplementation : IAnchorPopover
 
         _dismissTaskCompletionSource = new TaskCompletionSource<bool>();
 
+        await ShowNativePopoverAsync(content, mauiContext, anchorView, anchorBounds, options);
+
+        // Wait for dismissal
+        await _dismissTaskCompletionSource.Task;
+    }
+
+    private async Task ShowNativePopoverAsync(
+        Microsoft.Maui.Controls.View content,
+        IMauiContext mauiContext,
+        UIView? anchorView,
+        CoreGraphics.CGRect? anchorBounds,
+        PopoverOptions options)
+    {
         // Get the current view controller
         var currentViewController = GetCurrentViewController(mauiContext);
         if (currentViewController == null)
@@ -165,9 +178,6 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         // Present the popover
         _popoverViewController = contentViewController;
         await currentViewController.PresentViewControllerAsync(contentViewController, true);
-
-        // Wait for dismissal
-        await _dismissTaskCompletionSource.Task;
     }
 
     private static UIPopoverArrowDirection ConvertArrowDirection(PopoverArrowDirection direction)
