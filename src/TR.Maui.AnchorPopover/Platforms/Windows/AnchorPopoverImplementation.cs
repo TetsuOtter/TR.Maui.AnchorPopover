@@ -112,9 +112,15 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         
         if (options.BackgroundColor != null)
         {
+            var color = Microsoft.UI.Xaml.Media.Color.FromArgb(
+                (byte)(options.BackgroundColor.Alpha * 255),
+                (byte)(options.BackgroundColor.Red * 255),
+                (byte)(options.BackgroundColor.Green * 255),
+                (byte)(options.BackgroundColor.Blue * 255)
+            );
             flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(
                 FlyoutPresenter.BackgroundProperty,
-                new Microsoft.UI.Xaml.Media.SolidColorBrush(options.BackgroundColor.ToWindowsColor())
+                new Microsoft.UI.Xaml.Media.SolidColorBrush(color)
             ));
         }
 
@@ -159,7 +165,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
                 // For simplicity, we'll just use the ShowAt method with the root element
                 _flyout.ShowAt(rootElement, new FlyoutShowOptions
                 {
-                    Position = new Windows.Foundation.Point(anchorBounds.Value.X, anchorBounds.Value.Y),
+                    Position = new global::Windows.Foundation.Point(anchorBounds.Value.X, anchorBounds.Value.Y),
                     Placement = _flyout.Placement
                 });
             }
