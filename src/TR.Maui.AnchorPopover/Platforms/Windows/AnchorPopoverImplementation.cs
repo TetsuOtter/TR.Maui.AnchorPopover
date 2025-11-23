@@ -2,6 +2,7 @@
 using Microsoft.Maui.Platform;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Graphics.Platform;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -44,7 +45,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         if (content == null)
             throw new ArgumentNullException(nameof(content));
 
-        var mauiContext = content.Handler?.MauiContext ?? Application.Current?.Windows[0]?.Page?.Handler?.MauiContext;
+        var mauiContext = content.Handler?.MauiContext ?? Microsoft.Maui.Controls.Application.Current?.Windows[0]?.Page?.Handler?.MauiContext;
         if (mauiContext == null)
             throw new InvalidOperationException("Unable to get MauiContext from content view.");
 
@@ -107,23 +108,23 @@ internal class AnchorPopoverImplementation : IAnchorPopover
             : LightDismissOverlayMode.Off;
 
         // Configure styling
-        var flyoutPresenterStyle = new Style(typeof(FlyoutPresenter));
+        var flyoutPresenterStyle = new Microsoft.UI.Xaml.Style(typeof(FlyoutPresenter));
         
         if (options.BackgroundColor != null)
         {
-            flyoutPresenterStyle.Setters.Add(new Setter(
+            flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(
                 FlyoutPresenter.BackgroundProperty,
-                new SolidColorBrush(options.BackgroundColor.ToWindowsColor())
+                new Microsoft.UI.Xaml.Media.SolidColorBrush(options.BackgroundColor.ToWindowsColor())
             ));
         }
 
-        flyoutPresenterStyle.Setters.Add(new Setter(FlyoutPresenter.PaddingProperty, new Thickness(0)));
-        flyoutPresenterStyle.Setters.Add(new Setter(FlyoutPresenter.BorderThicknessProperty, new Thickness(1)));
-        flyoutPresenterStyle.Setters.Add(new Setter(
+        flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(FlyoutPresenter.PaddingProperty, new Microsoft.UI.Xaml.Thickness(0)));
+        flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(FlyoutPresenter.BorderThicknessProperty, new Microsoft.UI.Xaml.Thickness(1)));
+        flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(
             FlyoutPresenter.BorderBrushProperty,
-            new SolidColorBrush(Microsoft.UI.Colors.LightGray)
+            new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGray)
         ));
-        flyoutPresenterStyle.Setters.Add(new Setter(FlyoutPresenter.CornerRadiusProperty, new CornerRadius(8)));
+        flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(FlyoutPresenter.CornerRadiusProperty, new Microsoft.UI.Xaml.CornerRadius(8)));
         
         _flyout.FlyoutPresenterStyle = flyoutPresenterStyle;
 
@@ -145,20 +146,20 @@ internal class AnchorPopoverImplementation : IAnchorPopover
             var window = mauiContext.Services.GetService<Microsoft.UI.Xaml.Window>();
             if (window?.Content is FrameworkElement rootElement)
             {
-                var tempAnchor = new Border
+                var tempAnchor = new Microsoft.UI.Xaml.Controls.Border
                 {
                     Width = anchorBounds.Value.Width,
                     Height = anchorBounds.Value.Height,
-                    Margin = new Thickness(anchorBounds.Value.X, anchorBounds.Value.Y, 0, 0),
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top
+                    Margin = new Microsoft.UI.Xaml.Thickness(anchorBounds.Value.X, anchorBounds.Value.Y, 0, 0),
+                    HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Left,
+                    VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Top
                 };
 
                 // Note: In a real scenario, you'd need to add this to a canvas or absolute positioned container
                 // For simplicity, we'll just use the ShowAt method with the root element
                 _flyout.ShowAt(rootElement, new FlyoutShowOptions
                 {
-                    Position = new Point(anchorBounds.Value.X, anchorBounds.Value.Y),
+                    Position = new Windows.Foundation.Point(anchorBounds.Value.X, anchorBounds.Value.Y),
                     Placement = _flyout.Placement
                 });
             }
