@@ -160,6 +160,9 @@ jobs:
           cp src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj.bak
           (Get-Content src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj) -replace '<TargetFrameworks.*</TargetFrameworks>', '<TargetFrameworks>${{ env.TARGET_FRAMEWORKS_ALL }}</TargetFrameworks>' | Set-Content src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
 
+      - name: Restore Dependencies
+        run: dotnet restore src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
+
       - name: Download Android Artifacts
         uses: actions/download-artifact@v4
         with:
