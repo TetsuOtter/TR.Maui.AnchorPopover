@@ -22,6 +22,11 @@ env:
   TARGET_FRAMEWORK_IOS: net9.0-ios
   TARGET_FRAMEWORK_MACCATALYST: net9.0-maccatalyst
   TARGET_FRAMEWORK_WINDOWS: net9.0-windows10.0.17763.0
+  TARGET_FRAMEWORKS_ALL: >
+    net9.0-android;
+    net9.0-ios;
+    net9.0-maccatalyst;
+    net9.0-windows10.0.17763.0
 
 jobs:
   build-android:
@@ -132,7 +137,7 @@ jobs:
           path: ${{ env.ARTIFACT_PATH_BASE }}/${{ env.TARGET_FRAMEWORK_WINDOWS }}/
 
   pack:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: [build-android, build-ios-maccatalyst, build-windows]
     permissions:
       id-token: write
@@ -145,13 +150,15 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install MAUI Workload
-        run: dotnet workload restore
-
       - name: Set Version
         if: github.event_name == 'workflow_dispatch'
         run: |
           sed -i 's/<Version>.*<\/Version>/<Version>${{ github.event.inputs.version }}<\/Version>/' src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
+
+      - name: Configure Target Frameworks for Packing
+        run: |
+          cp src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj.bak
+          (Get-Content src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj) -replace '<TargetFrameworks.*</TargetFrameworks>', '<TargetFrameworks>${{ env.TARGET_FRAMEWORKS_ALL }}</TargetFrameworks>' | Set-Content src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
 
       - name: Download Android Artifacts
         uses: actions/download-artifact@v4
@@ -182,10 +189,6 @@ jobs:
           dotnet pack src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
           --configuration Release
           --no-build
-          --framework ${{ env.TARGET_FRAMEWORK_ANDROID }}
-          --framework ${{ env.TARGET_FRAMEWORK_IOS }}
-          --framework ${{ env.TARGET_FRAMEWORK_MACCATALYST }}
-          --framework ${{ env.TARGET_FRAMEWORK_WINDOWS }}
           --output ./final-artifacts
 
       - name: Upload Package Artifacts
