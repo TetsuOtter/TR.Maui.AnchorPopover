@@ -3,10 +3,6 @@ using Microsoft.Maui.Platform;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Graphics.Platform;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 
 namespace TR.Maui.AnchorPopover.Platforms.Windows;
@@ -16,7 +12,7 @@ namespace TR.Maui.AnchorPopover.Platforms.Windows;
 /// </summary>
 internal class AnchorPopoverImplementation : IAnchorPopover
 {
-    private Flyout? _flyout;
+    private Microsoft.UI.Xaml.Controls.Flyout? _flyout;
     private TaskCompletionSource<bool>? _dismissTaskCompletionSource;
 
     public bool IsShowing => _flyout != null;
@@ -33,7 +29,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
             throw new InvalidOperationException("Unable to get MauiContext from content or anchor view.");
 
         // Get the native view for the anchor
-        var anchorNativeElement = anchor.ToPlatform(mauiContext) as FrameworkElement;
+        var anchorNativeElement = anchor.ToPlatform(mauiContext) as Microsoft.UI.Xaml.FrameworkElement;
         if (anchorNativeElement == null)
             throw new InvalidOperationException("Unable to convert anchor to native FrameworkElement.");
 
@@ -66,7 +62,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
     private async Task ShowFlyoutAsync(
         Microsoft.Maui.Controls.View content,
         IMauiContext mauiContext,
-        FrameworkElement? anchorElement,
+        Microsoft.UI.Xaml.FrameworkElement? anchorElement,
         Microsoft.Maui.Graphics.Rect? anchorBounds,
         PopoverOptions? options)
     {
@@ -81,12 +77,12 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         _dismissTaskCompletionSource = new TaskCompletionSource<bool>();
 
         // Convert MAUI view to native view
-        var nativeView = content.ToPlatform(mauiContext) as FrameworkElement;
+        var nativeView = content.ToPlatform(mauiContext) as Microsoft.UI.Xaml.FrameworkElement;
         if (nativeView == null)
             throw new InvalidOperationException("Unable to convert content to native FrameworkElement.");
 
         // Create flyout
-        _flyout = new Flyout();
+        _flyout = new Microsoft.UI.Xaml.Controls.Flyout();
         _flyout.Content = nativeView;
 
         // Configure size
@@ -104,11 +100,11 @@ internal class AnchorPopoverImplementation : IAnchorPopover
 
         // Configure dismissal behavior
         _flyout.LightDismissOverlayMode = options.DismissOnTapOutside 
-            ? LightDismissOverlayMode.On 
-            : LightDismissOverlayMode.Off;
+            ? Microsoft.UI.Xaml.Controls.LightDismissOverlayMode.On 
+            : Microsoft.UI.Xaml.Controls.LightDismissOverlayMode.Off;
 
         // Configure styling
-        var flyoutPresenterStyle = new Microsoft.UI.Xaml.Style(typeof(FlyoutPresenter));
+        var flyoutPresenterStyle = new Microsoft.UI.Xaml.Style(typeof(Microsoft.UI.Xaml.Controls.FlyoutPresenter));
         
         if (options.BackgroundColor != null)
         {
@@ -119,18 +115,18 @@ internal class AnchorPopoverImplementation : IAnchorPopover
                 (byte)(options.BackgroundColor.Blue * 255)
             );
             flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(
-                FlyoutPresenter.BackgroundProperty,
+                Microsoft.UI.Xaml.Controls.FlyoutPresenter.BackgroundProperty,
                 new Microsoft.UI.Xaml.Media.SolidColorBrush(color)
             ));
         }
 
-        flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(FlyoutPresenter.PaddingProperty, new Microsoft.UI.Xaml.Thickness(0)));
-        flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(FlyoutPresenter.BorderThicknessProperty, new Microsoft.UI.Xaml.Thickness(1)));
+        flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.FlyoutPresenter.PaddingProperty, new Microsoft.UI.Xaml.Thickness(0)));
+        flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.FlyoutPresenter.BorderThicknessProperty, new Microsoft.UI.Xaml.Thickness(1)));
         flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(
-            FlyoutPresenter.BorderBrushProperty,
-            new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.LightGray)
+            Microsoft.UI.Xaml.Controls.FlyoutPresenter.BorderBrushProperty,
+            new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Xaml.Colors.LightGray)
         ));
-        flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(FlyoutPresenter.CornerRadiusProperty, new Microsoft.UI.Xaml.CornerRadius(8)));
+        flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.FlyoutPresenter.CornerRadiusProperty, new Microsoft.UI.Xaml.CornerRadius(8)));
         
         _flyout.FlyoutPresenterStyle = flyoutPresenterStyle;
 
@@ -150,7 +146,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         {
             // For bounds-based positioning, we need to create a temporary anchor element
             var window = mauiContext.Services.GetService<Microsoft.UI.Xaml.Window>();
-            if (window?.Content is FrameworkElement rootElement)
+            if (window?.Content is Microsoft.UI.Xaml.FrameworkElement rootElement)
             {
                 var tempAnchor = new Microsoft.UI.Xaml.Controls.Border
                 {
@@ -175,15 +171,15 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         await _dismissTaskCompletionSource.Task;
     }
 
-    private static FlyoutPlacementMode ConvertArrowDirectionToPlacement(PopoverArrowDirection direction)
+    private static Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode ConvertArrowDirectionToPlacement(PopoverArrowDirection direction)
     {
         return direction switch
         {
-            PopoverArrowDirection.Up => FlyoutPlacementMode.Top,
-            PopoverArrowDirection.Down => FlyoutPlacementMode.Bottom,
-            PopoverArrowDirection.Left => FlyoutPlacementMode.Left,
-            PopoverArrowDirection.Right => FlyoutPlacementMode.Right,
-            _ => FlyoutPlacementMode.Auto
+            PopoverArrowDirection.Up => Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Top,
+            PopoverArrowDirection.Down => Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Bottom,
+            PopoverArrowDirection.Left => Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Left,
+            PopoverArrowDirection.Right => Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Right,
+            _ => Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.Auto
         };
     }
 }
