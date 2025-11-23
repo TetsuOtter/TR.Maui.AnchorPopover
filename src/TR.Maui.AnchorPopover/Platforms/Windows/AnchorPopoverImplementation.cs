@@ -1,5 +1,7 @@
 #if WINDOWS
 using Microsoft.Maui.Platform;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -37,7 +39,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         await ShowFlyoutAsync(content, mauiContext, anchorNativeElement, null, options);
     }
 
-    public async Task ShowAsync(Microsoft.Maui.Controls.View content, Rect anchorBounds, PopoverOptions? options = null)
+    public async Task ShowAsync(Microsoft.Maui.Controls.View content, Microsoft.Maui.Graphics.Rect anchorBounds, PopoverOptions? options = null)
     {
         if (content == null)
             throw new ArgumentNullException(nameof(content));
@@ -64,7 +66,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         Microsoft.Maui.Controls.View content,
         IMauiContext mauiContext,
         FrameworkElement? anchorElement,
-        Rect? anchorBounds,
+        Microsoft.Maui.Graphics.Rect? anchorBounds,
         PopoverOptions? options)
     {
         options ??= new PopoverOptions();
