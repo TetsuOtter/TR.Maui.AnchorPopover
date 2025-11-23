@@ -2,11 +2,11 @@ name: Publish to NuGet
 
 on:
   release:
-    types: [ published ]
+    types: [published]
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to publish (e.g., 1.0.0)'
+        description: "Version to publish (e.g., 1.0.0)"
         required: true
         type: string
 
@@ -15,40 +15,40 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
-        
-    - name: Install MAUI Workload
-      run: dotnet workload install maui-android
-      
-    - name: Set Version
-      if: github.event_name == 'workflow_dispatch'
-      run: |
-        sed -i 's/<Version>.*<\/Version>/<Version>${{ github.event.inputs.version }}<\/Version>/' src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
-      
-    - name: Restore Dependencies
-      run: dotnet restore
-      
-    - name: Build
-      run: dotnet build src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-restore
-      
-    - name: Pack
-      run: dotnet pack src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-build --output ./artifacts
-      
-    - name: Push to NuGet
-      run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        
-    - name: Upload Package Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: nuget-packages
-        path: ./artifacts/*.nupkg
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Install MAUI Workload
+        run: dotnet workload restore
+
+      - name: Set Version
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          sed -i 's/<Version>.*<\/Version>/<Version>${{ github.event.inputs.version }}<\/Version>/' src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-restore
+
+      - name: Pack
+        run: dotnet pack src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-build --output ./artifacts
+
+      - name: Push to NuGet
+        run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+      - name: Upload Package Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: ./artifacts/*.nupkg

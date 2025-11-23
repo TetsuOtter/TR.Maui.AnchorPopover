@@ -2,9 +2,9 @@ name: Build and Test
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   workflow_dispatch:
 
 jobs:
@@ -12,34 +12,36 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
-        
-    - name: Install MAUI Workload
-      run: dotnet workload install maui-android
-      
-    - name: Restore Dependencies
-      run: dotnet restore
-      
-    - name: Build Library
-      run: dotnet build src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-restore
-      
-    - name: Build Sample
-      run: dotnet build samples/TR.Maui.AnchorPopover.Sample/TR.Maui.AnchorPopover.Sample.csproj --configuration Release --no-restore
-      
-      
-    - name: Build UI Tests
-      run: dotnet build tests/TR.Maui.AnchorPopover.UITests/TR.Maui.AnchorPopover.UITests.csproj --configuration Release --no-restore
-      
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: nuget-package
-        path: src/TR.Maui.AnchorPopover/bin/Release/*.nupkg
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Install MAUI Workload
+        run: dotnet workload restore
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build Library
+        run: dotnet build src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj --configuration Release --no-restore
+
+      - name: Build Sample
+        run: dotnet build samples/TR.Maui.AnchorPopover.Sample/TR.Maui.AnchorPopover.Sample.csproj --configuration Release --no-restore
+
+      - name: Build Unit Tests
+        run: dotnet build tests/TR.Maui.AnchorPopover.UnitTests/TR.Maui.AnchorPopover.UnitTests.csproj --configuration Release --no-restore
+
+      - name: Build UI Tests
+        run: dotnet build tests/TR.Maui.AnchorPopover.UITests/TR.Maui.AnchorPopover.UITests.csproj --configuration Release --no-restore
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: src/TR.Maui.AnchorPopover/bin/Release/*.nupkg
