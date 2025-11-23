@@ -124,7 +124,7 @@ internal class AnchorPopoverImplementation : IAnchorPopover
         flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.FlyoutPresenter.BorderThicknessProperty, new Microsoft.UI.Xaml.Thickness(1)));
         flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(
             Microsoft.UI.Xaml.Controls.FlyoutPresenter.BorderBrushProperty,
-            new Microsoft.UI.Xaml.Media.SolidColorBrush(global::Windows.UI.Colors.LightGray)
+            new Microsoft.UI.Xaml.Media.SolidColorBrush(global::Windows.UI.Color.FromArgb(255, 211, 211, 211))
         ));
         flyoutPresenterStyle.Setters.Add(new Microsoft.UI.Xaml.Setter(Microsoft.UI.Xaml.Controls.FlyoutPresenter.CornerRadiusProperty, new Microsoft.UI.Xaml.CornerRadius(8)));
         
