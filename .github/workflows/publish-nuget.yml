@@ -153,7 +153,7 @@ jobs:
       - name: Set Version
         if: github.event_name == 'workflow_dispatch'
         run: |
-          sed -i 's/<Version>.*<\/Version>/<Version>${{ github.event.inputs.version }}<\/Version>/' src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
+          (Get-Content src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj) -replace '<Version>.*</Version>', '<Version>${{ github.event.inputs.version }}</Version>' | Set-Content src/TR.Maui.AnchorPopover/TR.Maui.AnchorPopover.csproj
 
       - name: Configure Target Frameworks for Packing
         run: |
@@ -209,4 +209,4 @@ jobs:
 
       - name: Push to NuGet
         if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
-        run: dotnet nuget push ./final-artifacts/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push (Get-ChildItem ./final-artifacts/*.nupkg) --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
